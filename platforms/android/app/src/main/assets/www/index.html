@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <div class="fadeIn first">
+            <p> </p>
+            <p>PLEASE ENTER PLAYER NAME</p>
+            <p>(MAX 10 CHARS)</p>
+        </div>
+
+        <form>
+            <input type="text" id="username" class="fadeIn second" name="username" maxlength="10" placeholder="ENTER PLAYER NAME">
+            <input type="submit" class="fadeIn third" value="PLAY" formaction="asteroidio.html">
+            <a href="#" id="googlebtn" class="google btn" onclick="loginWithGoogle()"> Login with Google</a>
+            <a href="#" class="signin btn" onclick="loginManually()"> Login manually</a>
+        </form>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase.js"></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyAtM76rxaPOMTffPqARgexZIT7_6uwKhHc",
+        authDomain: "asteroidio.firebaseapp.com",
+        databaseURL: "https://asteroidio.firebaseio.com",
+        projectId: "asteroidio",
+        storageBucket: "asteroidio.appspot.com",
+        messagingSenderId: "92861907648",
+        appId: "1:92861907648:web:2777e61fe7ad468a35a325",
+        measurementId: "G-YH753JLJYH"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    function loginWithGoogle() {
+        console.log("Google Authentication successful");
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+            window.location.assign("asteroidio.html");
+        }).catch(function(error) {
+        });
+    }
+
+    function loginManually() {
+        window.location.assign("signIn.html");
+    }
+</script>
+</body>
+</html>
