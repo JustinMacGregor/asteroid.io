@@ -46,7 +46,7 @@
         console.log("Google Authentication successful");
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
-            window.location.assign("asteroidio.html");
+            window.location.assign("game.html");
         }).catch(function(error) {
         });
     }
