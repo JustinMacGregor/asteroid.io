@@ -10,56 +10,55 @@
 </head>
 
 <body>
-<div class="wrapper fadeInDown">
-    <div id="formContent">
-        <div class="fadeIn first">
-            <p> </p>
-            <p>PLEASE ENTER PLAYER NAME</p>
-            <p>(MAX 10 CHARS)</p>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <div class="fadeIn first">
+                <p> </p>
+                <p>PLEASE ENTER PLAYER NAME</p>
+                <p>(MAX 10 CHARS)</p>
+            </div>
+
+            <form>
+                <input type="text" id="username" class="fadeIn second" name="username" maxlength="10" placeholder="ENTER PLAYER NAME" required>
+                <input type="submit" class="fadeIn third" value="PLAY" formaction="game.html">
+                <input type="submit" class="fadeIn third" value="LOGIN WITH GOOGLE" onclick="loginWithGoogle()">
+            </form>
         </div>
-
-        <form>
-            <input type="text" id="username" class="fadeIn second" name="username" maxlength="10" placeholder="ENTER PLAYER NAME">
-            <input type="submit" class="fadeIn third" value="PLAY" formaction="game.html">
-            <input type="submit" class="fadeIn third" value="LOGIN WITH GOOGLE" onclick="loginWithGoogle()">
-        </form>
     </div>
-</div>
 
-<script src="https://www.gstatic.com/firebasejs/7.13.2/firebase.js"></script>
-<script>
-    var firebaseConfig = {
-        apiKey: "AIzaSyAtM76rxaPOMTffPqARgexZIT7_6uwKhHc",
-        authDomain: "asteroidio.firebaseapp.com",
-        databaseURL: "https://asteroidio.firebaseio.com",
-        projectId: "asteroidio",
-        storageBucket: "asteroidio.appspot.com",
-        messagingSenderId: "92861907648",
-        appId: "1:92861907648:web:2777e61fe7ad468a35a325",
-        measurementId: "G-YH753JLJYH"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAtM76rxaPOMTffPqARgexZIT7_6uwKhHc",
+            authDomain: "asteroidio.firebaseapp.com",
+            databaseURL: "https://asteroidio.firebaseio.com",
+            projectId: "asteroidio",
+            storageBucket: "asteroidio.appspot.com",
+            messagingSenderId: "92861907648",
+            appId: "1:92861907648:web:2777e61fe7ad468a35a325",
+            measurementId: "G-YH753JLJYH"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
 
-    function loginWithGoogle() {
-        if (device.platform === "browser") {
-            console.log("Google Authentication successful");
-            var provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider).then(function(result) {
-                window.location.assign("game.html");
-            }).catch(function(error) {
-            });
-        } else {
-            window.plugins.googleplus.login( {
-            }, function(result) {
-                document.getElementById("username").innerText = result.givenName;
-            }, function(error) {
-                alert(JSON.stringify(error));
-            });
+        function loginWithGoogle() {
+            if (device.platform === "browser") {
+                console.log("Google Authentication successful");
+                var provider = new firebase.auth.GoogleAuthProvider();
+                firebase.auth().signInWithPopup(provider).then(function(result) {
+                    window.location.assign("game.html");
+                }).catch(function(error) {
+                });
+            } else {
+                window.plugins.googleplus.login( {
+                }, function(result) {
+                    window.location.assign("game.html");
+                }, function(error) {
+                    alert(JSON.stringify(error));
+                });
+            }
         }
-    }
-
-</script>
+    </script>
 </body>
 </html>

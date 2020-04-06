@@ -12,6 +12,9 @@
         <param name="onload" value="true" />
     </feature>
     <access origin="https://accounts.google.com/*" />
+    <feature name="CDVOrientation">
+        <param name="android-package" value="cordova.plugins.screenorientation.CDVOrientation" />
+    </feature>
     <name>Asteroid.IO</name>
     <description>
         An instant multiplayer version of the classic asteroid game, with many new features.

@@ -23,6 +23,7 @@
 		DE39845B148A40DA895DAB8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA24B998B1B5491D84869CE3 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		34FCB73F775843AC99DF7068 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A2AF92748A5145838A75397A /* libz.tbd */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D7984D63A4BB46FE97362958 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 03818FD020B8486AA7D60BB8 /* libz.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A69C5004C2904105B00F5174 /* CDVOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = A02B92DDCBBF4D8F9C274B28 /* CDVOrientation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 		DA24B998B1B5491D84869CE3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		A2AF92748A5145838A75397A /* libz.tbd */ = {isa = PBXFileReference; name = "libz.tbd"; path = "usr/lib/libz.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 		03818FD020B8486AA7D60BB8 /* libz.dylib */ = {isa = PBXFileReference; name = "libz.dylib"; path = "usr/lib/libz.dylib"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = compiled.mach-o.dylib; explicitFileType = undefined; includeInIndex = 0; };
+		A02B92DDCBBF4D8F9C274B28 /* CDVOrientation.m */ = {isa = PBXFileReference; name = "CDVOrientation.m"; path = "cordova-plugin-screen-orientation/CDVOrientation.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		56106A2970B34691A4652AF9 /* CDVOrientation.h */ = {isa = PBXFileReference; name = "CDVOrientation.h"; path = "cordova-plugin-screen-orientation/CDVOrientation.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +206,8 @@
 				7B0B92975F1847CFA1B41C60 /* CDVDevice.h */,
 				830CC2A7178047FDADA118F6 /* GooglePlus.m */,
 				7B9A8C7F69A44CADA9BA6497 /* GooglePlus.h */,
+				A02B92DDCBBF4D8F9C274B28 /* CDVOrientation.m */,
+				56106A2970B34691A4652AF9 /* CDVOrientation.h */,
 			);
 			name = Plugins;
 			path = "HelloCordova/Plugins";
@@ -329,6 +334,7 @@
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
 				A3CDEE6FFE1640D9837428FE /* CDVDevice.m in Sources */,
 				907AB616792A4C56B273A2F4 /* GooglePlus.m in Sources */,
+				A69C5004C2904105B00F5174 /* CDVOrientation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

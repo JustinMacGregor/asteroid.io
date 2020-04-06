@@ -29,6 +29,14 @@ module.exports = [
         "clobbers": [
             "GooglePlus"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "clobbers": [
+            "cordova.plugins.screenorientation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -36,7 +44,8 @@ module.exports.metadata =
 {
     "cordova-plugin-whitelist": "1.3.4",
     "cordova-plugin-device": "2.0.3",
-    "cordova-plugin-googleplus": "8.4.0"
+    "cordova-plugin-googleplus": "8.4.0",
+    "cordova-plugin-screen-orientation": "3.0.2"
 }
 // BOTTOM OF METADATA
 });
