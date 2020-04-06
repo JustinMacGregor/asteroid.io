@@ -1,10 +1,10 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "HelloCordova",
-  "short_name": "HelloCordova",
+  "name": "Asteroid.IO",
+  "short_name": "Asteroid.IO",
   "version": "io.cordova.asteroidio",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "An instant multiplayer version of the classic asteroid game, with many new features.",
   "author": "Apache Cordova Team",
   "icons": [],
   "start_url": "index.html"

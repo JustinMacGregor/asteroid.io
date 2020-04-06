@@ -50,10 +50,10 @@
                 window.location.assign("game.html");
             }).catch(function(error) {
             });
-        } else if (device.platform === "android"){
+        } else {
             window.plugins.googleplus.login( {
             }, function(result) {
-                document.getElementById("username").textContent = result.givenName;
+                window.location.assign("game.html");
             }, function(error) {
                 alert(JSON.stringify(error));
             });

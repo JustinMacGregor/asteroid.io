@@ -5,11 +5,29 @@
     <title>Asteroid.io</title>
     <script type="text/javascript" src="js/game.js"></script>
     <link rel="stylesheet" type="text/css" href="css/gameCanvas.css">
+    <script type="text/javascript" src="cordova.js"></script>
 </head>
 
 <body>
-<div id="container">
-    <canvas id="asteroid-canvas"></canvas>
-</div>
+
+    <div style="position: relative;">
+        <div style="position: absolute; top: 0; right: 0;"><input type="button" value="LOG OUT" onclick="logOut()"/></div>
+    </div>
+
+    <div id="container">
+        <canvas id="asteroid-canvas"></canvas>
+    </div>
+
+    <script>
+        function logOut() {
+            window.plugins.googleplus.logout(
+                function (msg) {
+                    alert(msg);
+                    window.location.assign("index.html");
+                }
+            );
+        }
+    </script>
+
 </body>
 </html>
