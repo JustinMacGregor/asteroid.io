@@ -360,7 +360,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "HelloCordova/HelloCordova-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.cordova.asteroidio;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -383,7 +383,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "HelloCordova/HelloCordova-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.cordova.asteroidio;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -431,6 +431,7 @@
 				SKIP_INSTALL = NO;
 				WK_WEB_VIEW_ONLY = 0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.cordova.asteroidio;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
 		};
@@ -472,6 +473,7 @@
 				SKIP_INSTALL = NO;
 				WK_WEB_VIEW_ONLY = 0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.cordova.asteroidio;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
 		};

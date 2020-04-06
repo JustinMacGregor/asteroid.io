@@ -19,9 +19,9 @@
         </div>
 
         <form>
-            <input type="text" id="username" class="fadeIn second" name="username" maxlength="10" placeholder="ENTER PLAYER NAME">
+            <input type="text" id="username" class="fadeIn second" name="username" maxlength="10" placeholder="ENTER PLAYER NAME" required>
             <input type="submit" class="fadeIn third" value="PLAY" formaction="game.html">
-            <input type="submit" class="fadeIn third" value="LOGIN WITH GOOGLE" onclick="googleAndroid()">
+            <input type="submit" class="fadeIn third" value="LOGIN WITH GOOGLE" onclick="loginWithGoogle()">
         </form>
     </div>
 </div>
@@ -51,31 +51,15 @@
             }).catch(function(error) {
             });
         } else {
-            alert("got to here");
             window.plugins.googleplus.login( {
-
             }, function(result) {
-                alert(JSON.stringify(result));
+                window.location.assign("game.html");
             }, function(error) {
                 alert(JSON.stringify(error));
             });
         }
     }
 
-    function googleAndroid() {
-        window.plugins.googleplus.login( {
-
-        }, function(result) {
-            alert(JSON.stringify(result));
-            alert("success");
-        }, function(error) {
-            alert(JSON.stringify(error));
-        });
-    }
-
-    function loginManually() {
-        window.location.assign("signIn.html");
-    }
 </script>
 </body>
 </html>

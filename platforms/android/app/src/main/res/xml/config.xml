@@ -12,9 +12,9 @@
         <param name="onload" value="true" />
     </feature>
     <access origin="https://accounts.google.com/*" />
-    <name>HelloCordova</name>
+    <name>Asteroid.IO</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        An instant multiplayer version of the classic asteroid game, with many new features.
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
