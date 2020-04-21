@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="viewport" content="width = device-width, initial-scale = 1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <title>Asteroid.io</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Asteroid.io">
+    <meta name="Alex Theil and Justin MacGregor" content="Asteroid.io">
     <link rel="stylesheet" type="text/css" href="css/gameCanvas.css">
     <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
@@ -12,6 +18,9 @@
 
     <div id="container">
         <canvas id="asteroid-canvas"></canvas>
+        <button id='buttonTopSpeed' onclick = "topSpeedClicked()">Top Speed</button>
+        <button id='buttonFireRate' onclick = "fireRateClicked()">Fire Rate</button>
+        <button id='buttonWeight' onclick= 'weightClicked()'>Weight</button>
     </div>
 
    <div style="position: relative;">
