@@ -8,7 +8,6 @@ let bullets = [];
 let asteroids = [];
 let score = 0;
 let lives = 3;
-
 let highScore;
 let localStorageName = "HighScore";
 
@@ -19,11 +18,8 @@ function SetupCanvas(){
     ctx = canvas.getContext("2d");
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    //ctx.lineWidth = 5;
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-
 
     ship = new Ship();
 
@@ -34,7 +30,6 @@ function SetupCanvas(){
     document.body.addEventListener("keydown", HandleKeyDown);
     document.body.addEventListener("keyup", HandleKeyUp);
 
-    // Retrieves locally stored high scores
     if (localStorage.getItem(localStorageName) == null) {
         highScore = 0;
     } else {
@@ -105,20 +100,14 @@ class Ship {
         this.angle += this.rotateSpeed * dir;
     }
     Update() {
-        // Get current direction ship is facing
         let radians = this.angle / Math.PI * 180;
 
-        // If moving forward calculate changing values of x & y
-        // If you want to find the new point x use the
-        // formula oldX + cos(radians) * distance
-        // Forumla for y oldY + sin(radians) * distance
         if (this.movingForward) {
             this.velX += Math.cos(radians) * this.speed;
             this.velY += Math.sin(radians) * this.speed;
 
         }
-        // If ship goes off board place it on the opposite
-        // side
+
         if (this.x < this.radius) {
             handleDeath();
         }
@@ -131,14 +120,11 @@ class Ship {
         if (this.y > canvas.height) {
             handleDeath();
         }
-        // Slow ship speed when not holding key
 
         ctx.translate(this.x,this.y);
         this.velX *= 0.99;
         this.velY *= 0.99;
 
-        // Change value of x & y while accounting for
-        // air friction
         this.x -= this.velX;
         this.y -= this.velY;
 
@@ -153,11 +139,9 @@ class Ship {
         if (blinking) {
             ctx.strokeStyle = this.strokeColor;
             ctx.beginPath();
-            // Angle between vertices of the ship
             let vertAngle = ((Math.PI * 2) / 3);
 
             let radians = this.angle / Math.PI * 180;
-            // Where to fire bullet from
             this.noseX = this.x - this.radius * Math.cos(radians);
             this.noseY = this.y - this.radius * Math.sin(radians);
 
@@ -170,7 +154,7 @@ class Ship {
 
         if (this.numBlinks > 0) {
             this.blinkTime--;
-            if (this.blinkTime == 0){
+            if (this.blinkTime === 0){
                 this.blinkTime = Math.ceil (0.1 * 30);
                 this.numBlinks--;
             }
@@ -213,7 +197,6 @@ class Asteroid{
         this.angle = Math.floor(Math.random() * 359);
         this.strokeColor = 'white';
         this.collisionRadius = collisionRadius || 46;
-        // Used to decide if this asteroid can be broken into smaller pieces
         this.level = level || 1;
     }
     Update(){
@@ -269,44 +252,32 @@ function CircleCollision(p1x, p1y, r1, p2x, p2y, r2){
     }
 }
 
-// Handles drawing life ships on screen
+
 function DrawLifeShips(){
     let startX = 1350;
     let startY = 10;
     let points = [[9, 9], [-9, 9]];
-    ctx.strokeStyle = 'white'; // Stroke color of ships
-    // Cycle through all live ships remaining
+    ctx.strokeStyle = 'white';
     for(let i = 0; i < lives; i++){
-        // Start drawing ship
         ctx.beginPath();
-        // Move to origin point
         ctx.moveTo(startX, startY);
-        // Cycle through all other points
         for(let j = 0; j < points.length; j++){
             ctx.lineTo(startX + points[j][0],
                 startY + points[j][1]);
         }
-        // Draw from last point to 1st origin point
         ctx.closePath();
-        // Stroke the ship shape white
         ctx.stroke();
-        // Move next shape 30 pixels to the left
         startX -= 30;
     }
 }
 
 function Render() {
-    // Check if the ship is moving forward
     ship.movingForward = (keys[87]);
-
     gun.update();
-
     if (keys[68]) {
-        // d key rotate right
         ship.Rotate(1);
     }
     if (keys[65]) {
-        // a key rotate left
         ship.Rotate(-1);
     }
 
@@ -317,14 +288,11 @@ function Render() {
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    // Display score
     ctx.fillStyle = 'white';
     ctx.font = '21px Arial';
     ctx.fillText("SCORE : " + score.toString(), 20, 35);
 
-    // If no lives signal game over
     if(lives <= 0){
-        // If Game over remove event listeners to stop getting keyboard input
         document.body.removeEventListener("keydown", HandleKeyDown);
         document.body.removeEventListener("keyup", HandleKeyUp);
 
@@ -347,10 +315,8 @@ function Render() {
         }
     }
 
-
     DrawLifeShips();
 
-    // collision of ship with asteroid
     if (asteroids.length !== 0 && ship.numBlinks == 0) {
         for(let k = 0; k < asteroids.length; k++){
             if(CircleCollision(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
@@ -371,7 +337,6 @@ function Render() {
             for(let l = 0; l < asteroids.length; l++){
                 for(let m = 0; m < bullets.length; m++){
                     if(CircleCollision(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
-                        // Check if asteroid can be broken into smaller pieces
                         if(asteroids[l].level === 1){
                             asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
                             asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
@@ -398,9 +363,6 @@ function Render() {
                             asteroids.splice(l,1);
                             bullets.splice(m,1);
                         }
-
-                        // Used to break out of loops because splicing arrays
-                        // you are looping through will break otherwise
                         break loop1;
                     }
                 }
