@@ -6,7 +6,7 @@ let keys = [];
 let ship;
 let bullets = [];
 let asteroids = [];
-let score = 0;
+let exp = 0;
 let lives = 3;
 
 let highScore;
@@ -19,7 +19,6 @@ function SetupCanvas(){
     ctx = canvas.getContext("2d");
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
-    //ctx.lineWidth = 5;
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -90,9 +89,11 @@ class Ship {
         this.x = canvasWidth / 2;
         this.y = canvasHeight / 2;
         this.movingForward = false;
+        this.drag = 0.99;
         this.speed = 0.1;
         this.velX = 0;
         this.velY = 0;
+        this.expToLevel = 10;
         this.rotateSpeed = 0.001;
         this.radius = 15;
         this.angle = 0;
@@ -109,16 +110,12 @@ class Ship {
         let radians = this.angle / Math.PI * 180;
 
         // If moving forward calculate changing values of x & y
-        // If you want to find the new point x use the
-        // formula oldX + cos(radians) * distance
-        // Forumla for y oldY + sin(radians) * distance
         if (this.movingForward) {
             this.velX += Math.cos(radians) * this.speed;
             this.velY += Math.sin(radians) * this.speed;
 
         }
-        // If ship goes off board place it on the opposite
-        // side
+        // If ship goes off board, process a death
         if (this.x < this.radius) {
             handleDeath();
         }
@@ -134,8 +131,8 @@ class Ship {
         // Slow ship speed when not holding key
 
         ctx.translate(this.x,this.y);
-        this.velX *= 0.99;
-        this.velY *= 0.99;
+        this.velX *= this.drag;
+        this.velY *= this.drag;
 
         // Change value of x & y while accounting for
         // air friction
@@ -166,6 +163,11 @@ class Ship {
             }
             ctx.closePath();
             ctx.stroke();
+
+            // Display exp over ship
+            ctx.fillStyle = 'white';
+            ctx.font = '10px Arial';
+            ctx.fillText(exp.toString() + "/" + this.expToLevel.toString(), this.x, this.y - 20);
         }
 
         if (this.numBlinks > 0) {
@@ -320,7 +322,7 @@ function Render() {
     // Display score
     ctx.fillStyle = 'white';
     ctx.font = '21px Arial';
-    ctx.fillText("SCORE : " + score.toString(), 20, 35);
+    ctx.fillText("EXP : " + exp.toString(), 20, 35);
 
     // If no lives signal game over
     if(lives <= 0){
@@ -356,7 +358,7 @@ function Render() {
             if(CircleCollision(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
                 if (asteroids[k].level == 4){
                     asteroids.splice(k,1);
-                    score += 20;
+                    exp += 1;
                 }
                 else{
                     handleDeath();
@@ -426,10 +428,10 @@ function Render() {
     }
 
     // Updates the high score using local storage
-    highScore = Math.max(score, highScore);
+    highScore = Math.max(exp, highScore);
     localStorage.setItem(localStorageName, highScore);
     ctx.font = '21px Arial';
-    ctx.fillText("HIGH SCORE : " + highScore.toString(), 20, 70);
+    ctx.fillText("EXP RECORD : " + highScore.toString(), 20, 70);
 
     requestAnimationFrame(Render);
 }
