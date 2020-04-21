@@ -69,7 +69,8 @@ const gun = {
         }
     },
     fire(){
-        if(this.nextShotIn === 0){
+        if(this.nextShotIn <= 0){
+            ship.currentExp +=10;
             this.fireRate = ship.fireRate;
             bullets.push(new Bullet(ship.angle));
             this.nextShotIn = this.fireRate;
@@ -88,10 +89,11 @@ class Ship {
         this.x = canvasWidth / 2;
         this.y = canvasHeight / 2;
         this.movingForward = false;
-        this.drag = 0.99;
-        this.speed = 0.1;
+        this.weight = 0.99;
+        this.speed = 0.05;
         this.velX = 0;
         this.velY = 0;
+        this.level = 1;
         this.totalExp = 10;
         this.currentExp = 10;
         this.expToLevel = 10;
@@ -112,6 +114,7 @@ class Ship {
 
         // If moving forward calculate changing values of x & y
         if (this.movingForward) {
+
             this.velX += Math.cos(radians) * this.speed;
             this.velY += Math.sin(radians) * this.speed;
 
@@ -129,17 +132,14 @@ class Ship {
         if (this.y > canvas.height) {
             handleDeath();
         }
-        // Slow ship speed when not holding key
 
         ctx.translate(this.x,this.y);
-        this.velX *= this.drag;
-        this.velY *= this.drag;
+        // Induce weight
+            this.velX *= this.weight;
+            this.velY *= this.weight;
 
-        // Change value of x & y while accounting for
-        // air friction
-        this.x -= this.velX;
-        this.y -= this.velY;
-
+            this.x -= this.velX;
+            this.y -= this.velY;
         ctx.translate(-this.x, -this.y);
         ctx.strokeStyle = "white";
         ctx.strokeRect(1, 1, canvas.width-2, canvas.height-2);
@@ -169,6 +169,13 @@ class Ship {
             ctx.fillStyle = 'white';
             ctx.font = '10px Helvetica';
             ctx.fillText(this.currentExp.toString() + "/" + this.expToLevel.toString(), this.x, this.y - 20);
+
+
+        }
+        let btnFireRate = document.getElementById("buttonFireRate");
+        if (btnFireRate.style.visibility === "visible") {
+            ctx.font = '10px Helvetica';
+            ctx.fillText("LEVEL UP", this.x + 50, this.y);
         }
 
         if (this.numBlinks > 0) {
@@ -276,8 +283,8 @@ function topSpeedClicked(){
     levelUp("TopSpeed");
 }
 
-function handlingClicked(){
-    levelUp("Handling");
+function weightClicked(){
+    levelUp("Weight");
 }
 
 function fireRateClicked(){
@@ -286,27 +293,27 @@ function fireRateClicked(){
 
 
 function levelUp (buttonClicked){
-    let btnHandling = document.getElementById("buttonHandling");
+    let btnWeight = document.getElementById("buttonWeight");
     let btnTopSpeed = document.getElementById("buttonTopSpeed");
     let btnFireRate = document.getElementById("buttonFireRate");
 
+    if (buttonClicked === "Weight"){
+        ship.weight-=0.005;
+    }
+    else if (buttonClicked === "TopSpeed") {
+        ship.speed+=0.02;
+    }
+    else if (buttonClicked === "FireRate"){
+        ship.fireRate = ship.fireRate - (ship.fireRate / 25);
+    }
 
-    if (buttonClicked === "Handling"){
-        ship.drag-=0.01;
-    }
-    if (buttonClicked === "TopSpeed") {
-        ship.speed+=0.05;
-    }
-    else{
-        //not sure why but ship.fireRate -=10 breaks the levelup event
-        ship.fireRate = ship.fireRate - 10;
-    }
-    btnHandling.disabled = true;
-    btnHandling.style.visibility = "hidden";
+    btnWeight.disabled = true;
+    btnWeight.style.visibility = "hidden";
     btnTopSpeed.disabled = true;
     btnTopSpeed.style.visibility = "hidden";
     btnFireRate.disabled = true;
     btnFireRate.style.visibility = "hidden";
+
 }
 
 
@@ -352,6 +359,7 @@ function Render() {
     }
 
     if (keys[32]){
+
         gun.fire();
     }
 
@@ -454,21 +462,22 @@ function Render() {
         ship.Draw();
     }
 
-   if (ship.currentExp === ship.expToLevel){
+   if (ship.currentExp >= ship.expToLevel){
        ship.expToLevel += 5;
        ship.currentExp = 0;
+       ship.level += 1;
        let btnTopSpeed = document.getElementById("buttonTopSpeed");
        btnTopSpeed.addEventListener("click", topSpeedClicked);
        let btnFireRate = document.getElementById("buttonFireRate");
        btnFireRate.addEventListener("click", fireRateClicked);
-       let btnHandling = document.getElementById("buttonHandling");
-       btnHandling.addEventListener("click", handlingClicked);
+       let btnWeight = document.getElementById("buttonWeight");
+       btnWeight.addEventListener("click", weightClicked);
 
        btnFireRate.disabled = false;
        btnFireRate.style.visibility = "visible";
 
-       btnHandling.disabled = false;
-       btnHandling.style.visibility = "visible";
+       btnWeight.disabled = false;
+       btnWeight.style.visibility = "visible";
 
        btnTopSpeed.disabled = false;
        btnTopSpeed.style.visibility = "visible";
@@ -492,6 +501,6 @@ function Render() {
     localStorage.setItem(localStorageName, highScore);
     ctx.font = '21px Helvetica';
     ctx.fillText("EXP RECORD : " + highScore.toString(), 20, 70);
-
+    ctx.fillText("LEVEL : " + ship.level.toString(), 20, 105);
     requestAnimationFrame(Render);
 }
