@@ -70,7 +70,6 @@ const gun = {
     },
     fire(){
         if(this.nextShotIn <= 0){
-            ship.currentExp +=10;
             this.fireRate = ship.fireRate;
             bullets.push(new Bullet(ship.angle));
             this.nextShotIn = this.fireRate;
@@ -143,6 +142,11 @@ class Ship {
         ctx.translate(-this.x, -this.y);
         ctx.strokeStyle = "white";
         ctx.strokeRect(1, 1, canvas.width-2, canvas.height-2);
+
+        //ctx.fillStyle = 'white';
+        //ctx.font = '1000px Helvetica';
+        //ctx.fillText("huge text", 500, 500);
+
 
     }
     Draw() {
