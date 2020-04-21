@@ -7,11 +7,6 @@
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/index.css">
     <script type="text/javascript" src="cordova.js"></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-    <meta charset="utf-8">
     <title>Asteroid.io</title>
     <meta name="description" content="Asteroid.io">
     <meta name="Alex Theil and Justin MacGregor" content="Asteroid.io">
@@ -58,10 +53,10 @@
                     window.location.assign("game.html");
                 }).catch(function(error) {
                 });
-            } else {
+            } else if (device.platform === "android"){
                 window.plugins.googleplus.login( {
                 }, function(result) {
-                    window.location.assign("game.html");
+                    document.getElementById("username").textContent = result.givenName;
                 }, function(error) {
                     alert(JSON.stringify(error));
                 });
