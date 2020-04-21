@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
-    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
     <title>Asteroid.io</title>
-    <meta charset="utf-8">
-    <meta name="description" content="Asteroid.io">
-    <meta name="Alex Theil and Justin MacGregor" content="Asteroid.io">
-    <link rel="stylesheet" type="text/css" href="css/gameCanvas.css">
     <script type="text/javascript" src="js/game.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/gameCanvas.css">
     <script type="text/javascript" src="cordova.js"></script>
 </head>
 
@@ -21,11 +15,9 @@
         <button id='buttonTopSpeed' onclick = "topSpeedClicked()">Top Speed</button>
         <button id='buttonFireRate' onclick = "fireRateClicked()">Fire Rate</button>
         <button id='buttonWeight' onclick= 'weightClicked()'>Weight</button>
+        <button id='buttonLogOut' onclick= 'logOut()'>Log Out</button>
+        <button id='userName'>Username</button>
     </div>
-
-   <div style="position: relative;">
-        <div style="position: absolute; top: 0; right: 0;"><input type="button" value="LOG OUT" onclick="logOut()"/></div>
-   </div>
 
     <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase.js"></script>
     <script>
@@ -42,6 +34,10 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         firebase.analytics();
+
+        document.getElementById('userName').innerText = localStorage.getItem('userName');
+
+        console.log(name);
 
         function logOut() {
             if (device.platform === "browser") {

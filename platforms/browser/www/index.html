@@ -7,6 +7,9 @@
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/index.css">
     <script type="text/javascript" src="cordova.js"></script>
+    <title>Asteroid.io</title>
+    <meta name="description" content="Asteroid.io">
+    <meta name="Alex Theil and Justin MacGregor" content="Asteroid.io">
 </head>
 
 <body onload="screen.orientation.lock('portrait')">
@@ -20,7 +23,7 @@
 
             <form>
                 <input type="text" id="username" class="fadeIn second" name="username" maxlength="10" placeholder="ENTER PLAYER NAME" required>
-                <input type="submit" class="fadeIn third" value="PLAY" formaction="game.html">
+                <input type="submit" class="fadeIn third" value="PLAY" onclick="loginManually()" formaction="game.html">
                 <input type="submit" class="fadeIn third" value="LOGIN WITH GOOGLE" onclick="loginWithGoogle()">
             </form>
         </div>
@@ -40,19 +43,43 @@
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
+        firebase.analytics();4
+
+        function loginManually() {
+            var name = document.getElementById("username").value.toString();
+            localStorage.setItem('userName', name);
+        }
 
         function loginWithGoogle() {
             if (device.platform === "browser") {
                 console.log("Google Authentication successful");
                 var provider = new firebase.auth.GoogleAuthProvider();
                 firebase.auth().signInWithPopup(provider).then(function(result) {
+                    var user = firebase.auth().currentUser;
+                    var name, photoUrl;
+
+                    if (user != null) {
+                        name = user.displayName;
+                        photoUrl = user.photoURL;
+                        localStorage.setItem('userName', name);
+                        localStorage.setItem('photo', photoUrl);
+                    }
                     window.location.assign("game.html");
+
                 }).catch(function(error) {
                 });
-            } else {
+            } else if (device.platform === "android"){
                 window.plugins.googleplus.login( {
                 }, function(result) {
+                    var user = firebase.auth().currentUser;
+                    var name, photoUrl;
+
+                    if (user != null) {
+                        name = user.displayName;
+                        photoUrl = user.photoURL;
+                        localStorage.setItem('userName', name);
+                        localStorage.setItem('photo', photoUrl);
+                    }
                     window.location.assign("game.html");
                 }, function(error) {
                     alert(JSON.stringify(error));

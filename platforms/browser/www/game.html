@@ -3,8 +3,8 @@
 <head>
     <meta name="viewport" content="width = device-width, initial-scale = 1">
     <title>Asteroid.io</title>
-    <link rel="stylesheet" type="text/css" href="css/gameCanvas.css">
     <script type="text/javascript" src="js/game.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/gameCanvas.css">
     <script type="text/javascript" src="cordova.js"></script>
 </head>
 
@@ -12,10 +12,11 @@
 
     <div id="container">
         <canvas id="asteroid-canvas"></canvas>
-    </div>
-
-   <div style="position: relative;">
-        <div style="position: absolute; top: 0; right: 0;"><input type="button" value="LOG OUT" onclick="logOut()"/></div>
+        <button id='buttonTopSpeed' onclick = "topSpeedClicked()">Top Speed</button>
+        <button id='buttonFireRate' onclick = "fireRateClicked()">Fire Rate</button>
+        <button id='buttonWeight' onclick= 'weightClicked()'>Weight</button>
+        <button id='buttonLogOut' onclick= 'logOut()'>Log Out</button>
+        <button id='userName'>Username</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase.js"></script>
@@ -34,6 +35,10 @@
         firebase.initializeApp(firebaseConfig);
         firebase.analytics();
 
+        document.getElementById('userName').innerText = localStorage.getItem('userName');
+
+        console.log(name);
+
         function logOut() {
             if (device.platform === "browser") {
                 firebase.auth().signOut().then(function() {
@@ -50,6 +55,8 @@
                 );
             }
         }
+
+
     </script>
 </body>
 </html>

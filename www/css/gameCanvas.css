@@ -46,6 +46,19 @@ button{
     bottom:42.5%;
 }
 
+#buttonLogOut {
+    position:absolute;
+    left:95.5%;
+    bottom:95.5%;
+}
+
+#userName {
+    position:absolute;
+    bottom:52.5%;
+    left:47%;
+    border: #0d0d0d;
+}
+
 #asteroid-canvas {
     background: black;
     width: 100%;
