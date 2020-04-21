@@ -6,7 +6,6 @@ let keys = [];
 let ship;
 let bullets = [];
 let asteroids = [];
-let exp = 0;
 let lives = 3;
 
 let highScore;
@@ -71,7 +70,7 @@ const gun = {
     },
     fire(){
         if(this.nextShotIn === 0){
-            fireRate = ship.fireRate;
+            this.fireRate = ship.fireRate;
             bullets.push(new Bullet(ship.angle));
             this.nextShotIn = this.fireRate;
         }
@@ -93,6 +92,8 @@ class Ship {
         this.speed = 0.1;
         this.velX = 0;
         this.velY = 0;
+        this.totalExp = 10;
+        this.currentExp = 10;
         this.expToLevel = 10;
         this.rotateSpeed = 0.001;
         this.radius = 15;
@@ -166,8 +167,8 @@ class Ship {
 
             // Display exp over ship
             ctx.fillStyle = 'white';
-            ctx.font = '10px Arial';
-            ctx.fillText(exp.toString() + "/" + this.expToLevel.toString(), this.x, this.y - 20);
+            ctx.font = '10px Helvetica';
+            ctx.fillText(this.currentExp.toString() + "/" + this.expToLevel.toString(), this.x, this.y - 20);
         }
 
         if (this.numBlinks > 0) {
@@ -271,6 +272,44 @@ function CircleCollision(p1x, p1y, r1, p2x, p2y, r2){
     }
 }
 
+function topSpeedClicked(){
+    levelUp("TopSpeed");
+}
+
+function handlingClicked(){
+    levelUp("Handling");
+}
+
+function fireRateClicked(){
+    levelUp("FireRate");
+}
+
+
+function levelUp (buttonClicked){
+    let btnHandling = document.getElementById("buttonHandling");
+    let btnTopSpeed = document.getElementById("buttonTopSpeed");
+    let btnFireRate = document.getElementById("buttonFireRate");
+
+
+    if (buttonClicked === "Handling"){
+        ship.drag-=0.01;
+    }
+    if (buttonClicked === "TopSpeed") {
+        ship.speed+=0.05;
+    }
+    else{
+        //not sure why but ship.fireRate -=10 breaks the levelup event
+        ship.fireRate = ship.fireRate - 10;
+    }
+    btnHandling.disabled = true;
+    btnHandling.style.visibility = "hidden";
+    btnTopSpeed.disabled = true;
+    btnTopSpeed.style.visibility = "hidden";
+    btnFireRate.disabled = true;
+    btnFireRate.style.visibility = "hidden";
+}
+
+
 // Handles drawing life ships on screen
 function DrawLifeShips(){
     let startX = 1350;
@@ -321,8 +360,8 @@ function Render() {
 
     // Display score
     ctx.fillStyle = 'white';
-    ctx.font = '21px Arial';
-    ctx.fillText("EXP : " + exp.toString(), 20, 35);
+    ctx.font = '21px Helvetica';
+    ctx.fillText("EXP : " + ship.totalExp.toString(), 20, 35);
 
     // If no lives signal game over
     if(lives <= 0){
@@ -332,7 +371,7 @@ function Render() {
 
         ship.visible = false;
         ctx.fillStyle = 'white';
-        ctx.font = '50px Arial';
+        ctx.font = '50px Helvetica';
         ctx.fillText("GAME OVER", canvasWidth / 2 - 150, canvasHeight / 2);
     }
 
@@ -358,7 +397,8 @@ function Render() {
             if(CircleCollision(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
                 if (asteroids[k].level == 4){
                     asteroids.splice(k,1);
-                    exp += 1;
+                    ship.currentExp += 1;
+                    ship.totalExp +=1;
                 }
                 else{
                     handleDeath();
@@ -414,6 +454,26 @@ function Render() {
         ship.Draw();
     }
 
+   if (ship.currentExp === ship.expToLevel){
+       ship.expToLevel += 5;
+       ship.currentExp = 0;
+       let btnTopSpeed = document.getElementById("buttonTopSpeed");
+       btnTopSpeed.addEventListener("click", topSpeedClicked);
+       let btnFireRate = document.getElementById("buttonFireRate");
+       btnFireRate.addEventListener("click", fireRateClicked);
+       let btnHandling = document.getElementById("buttonHandling");
+       btnHandling.addEventListener("click", handlingClicked);
+
+       btnFireRate.disabled = false;
+       btnFireRate.style.visibility = "visible";
+
+       btnHandling.disabled = false;
+       btnHandling.style.visibility = "visible";
+
+       btnTopSpeed.disabled = false;
+       btnTopSpeed.style.visibility = "visible";
+   }
+
     if (bullets.length !== 0) {
         for(let i = 0; i < bullets.length; i++){
             bullets[i].Update();
@@ -428,9 +488,9 @@ function Render() {
     }
 
     // Updates the high score using local storage
-    highScore = Math.max(exp, highScore);
+    highScore = Math.max(ship.totalExp, highScore);
     localStorage.setItem(localStorageName, highScore);
-    ctx.font = '21px Arial';
+    ctx.font = '21px Helvetica';
     ctx.fillText("EXP RECORD : " + highScore.toString(), 20, 70);
 
     requestAnimationFrame(Render);

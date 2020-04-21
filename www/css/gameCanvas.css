@@ -11,21 +11,38 @@ body {
     height: 100%;
 }
 
+button{
+    border-radius: 0px;
+    text-decoration: none;
+    padding: 6px 4px;
+    font-size: 10px;
+    line-height: 19px;
+    text-transform: uppercase;
+    font-family: 'Helvetica', sans-serif; font-weight:400;
+    letter-spacing: 2px;
+    border:solid 1px #fff;
+    background: transparent;
+    color: #fff !important;
+}
+
 #buttonTopSpeed {
     position:absolute;
+    visibility: hidden;
     left:41.75%;
     bottom:42.5%;
 }
 
 #buttonHandling {
     position:absolute;
+    visibility: hidden;
     left:47.5%;
     bottom:42.5%;
 }
 
 #buttonFireRate {
     position:absolute;
-    left:52.5%;
+    visibility: hidden;
+    left:52.75%;
     bottom:42.5%;
 }
 
