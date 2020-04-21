@@ -3,19 +3,19 @@
 <head>
     <meta name="viewport" content="width = device-width, initial-scale = 1">
     <title>Asteroid.io</title>
-    <script type="text/javascript" src="js/game.js"></script>
     <link rel="stylesheet" type="text/css" href="css/gameCanvas.css">
+    <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
 </head>
 
-<body>
-
-    <div style="position: relative;">
-        <div style="position: absolute; top: 0; right: 0;"><input type="button" value="LOG OUT" onclick="logOut()"/></div>
-    </div>
+<body onload="screen.orientation.lock('landscape')">
 
     <div id="container">
         <canvas id="asteroid-canvas"></canvas>
+    </div>
+
+   <div style="position: relative;">
+        <div style="position: absolute; top: 0; right: 0;"><input type="button" value="LOG OUT" onclick="logOut()"/></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase.js"></script>
@@ -51,6 +51,5 @@
             }
         }
     </script>
-
 </body>
 </html>
