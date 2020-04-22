@@ -7,13 +7,12 @@ let ship;
 let bullets = [];
 let asteroids = [];
 let lives = 3;
-
 let highScore;
 let localStorageName = "HighScore";
 
-document.addEventListener('DOMContentLoaded', SetupCanvas);
+document.addEventListener('DOMContentLoaded', setupCanvas);
 
-function SetupCanvas(){
+function setupCanvas(){
     canvas = document.getElementById("asteroid-canvas");
     ctx = canvas.getContext("2d");
     canvas.width = canvasWidth;
@@ -21,8 +20,7 @@ function SetupCanvas(){
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-
-
+    //adding the ship and the asteroids to the canvas immediately upon creation
     ship = new Ship();
 
     for(let i = 0; i < 8; i++){
@@ -32,7 +30,6 @@ function SetupCanvas(){
     document.body.addEventListener("keydown", HandleKeyDown);
     document.body.addEventListener("keyup", HandleKeyUp);
 
-    // Retrieves locally stored high scores
     if (localStorage.getItem(localStorageName) == null) {
         highScore = 0;
     } else {
@@ -42,6 +39,7 @@ function SetupCanvas(){
     Render();
 }
 
+//returns the ship to the center of the canvas and changes necessary ship fields to process a death
 function handleDeath(){
     ship.x = canvasWidth / 2;
     ship.y = canvasHeight / 2;
@@ -60,6 +58,8 @@ function HandleKeyUp(e){
     keys[e.keyCode] = false;
 }
 
+
+//simulates firing rate cooldown by reducing a variable by a count of 1 every frame
 const gun = {
     fireRate : 80,
     nextShotIn : 0,
@@ -100,7 +100,6 @@ class Ship {
         this.radius = 15;
         this.angle = 0;
         this.strokeColor = 'white';
-        // Used to know where to fire the bullet from
         this.noseX = canvasWidth / 2 + 15;
         this.noseY = canvasHeight / 2;
     }
@@ -108,10 +107,10 @@ class Ship {
         this.angle += this.rotateSpeed * dir;
     }
     Update() {
-        // Get current direction ship is facing
+        //determines the angle the ship is facing
         let radians = this.angle / Math.PI * 180;
 
-        // If moving forward calculate changing values of x & y
+        //speed stat of the ship is increased as the W key is held
         if (this.movingForward) {
 
             this.velX += Math.cos(radians) * this.speed;
@@ -131,60 +130,61 @@ class Ship {
         if (this.y > canvas.height) {
             handleDeath();
         }
-
+        //translates the canvas to follow the ship positively before drag is applied
         ctx.translate(this.x,this.y);
-        // Induce weight
+        // Induce weight, reducing the velocity of the ship every frame by the weight coefficient
             this.velX *= this.weight;
             this.velY *= this.weight;
 
             this.x -= this.velX;
             this.y -= this.velY;
+        //after slowdown is applied, modify translation to account for it
         ctx.translate(-this.x, -this.y);
+        //draws the border on the outside of the canvas
         ctx.strokeStyle = "white";
         ctx.strokeRect(1, 1, canvas.width-2, canvas.height-2);
-
-        //ctx.fillStyle = 'white';
-        //ctx.font = '1000px Helvetica';
-        //ctx.fillText("huge text", 500, 500);
-
-
     }
     Draw() {
-        let blinking = this.numBlinks % 2 == 0;
+        //variable stores whether or not the ship is drawn, changing from true to false by being odd or even every frame
+        let blinking = this.numBlinks % 2 === 0;
 
+
+        //blinking will always be true when it's zero so the game will continue on as normal after numBlinks reaches 0
         if (blinking) {
             ctx.strokeStyle = this.strokeColor;
             ctx.beginPath();
-            // Angle between vertices of the ship
+            //angles of the triangle to draw the ship
             let vertAngle = ((Math.PI * 2) / 3);
-
+            //angle of the nose of the ship
             let radians = this.angle / Math.PI * 180;
-            // Where to fire bullet from
             this.noseX = this.x - this.radius * Math.cos(radians);
             this.noseY = this.y - this.radius * Math.sin(radians);
 
+            //drawing the ship
             for (let i = 0; i < 3; i++) {
                 ctx.lineTo(this.x - this.radius * Math.cos(vertAngle * i + radians), this.y - this.radius * Math.sin(vertAngle * i + radians));
             }
+
             ctx.closePath();
             ctx.stroke();
 
-            // Display exp over ship
+            // display exp over ship
             ctx.fillStyle = 'white';
             ctx.font = '10px Helvetica';
             ctx.fillText(this.currentExp.toString() + "/" + this.expToLevel.toString(), this.x, this.y - 20);
 
 
         }
+        //if one of the buttons is showing, display the levelup text
         let btnFireRate = document.getElementById("buttonFireRate");
         if (btnFireRate.style.visibility === "visible") {
             ctx.font = '10px Helvetica';
             ctx.fillText("LEVEL UP", this.x + 50, this.y);
         }
-
+        //setting and handling the duration of any single given blink over the blink duration
         if (this.numBlinks > 0) {
             this.blinkTime--;
-            if (this.blinkTime == 0){
+            if (this.blinkTime === 0){
                 this.blinkTime = Math.ceil (0.1 * 30);
                 this.numBlinks--;
             }
@@ -207,11 +207,13 @@ class Bullet{
         this.velY = 0;
     }
     Update(){
+        //finding the angle the ship is facing
         let radians = this.angle / Math.PI * 180;
         this.x -= Math.cos(radians) * this.speed;
         this.y -= Math.sin(radians) * this.speed;
     }
     Draw(){
+        //drawing the bullet on the canvas as it moves
         ctx.fillStyle = 'white';
         ctx.fillRect(this.x,this.y,this.width,this.height);
     }
@@ -220,6 +222,7 @@ class Bullet{
 class Asteroid{
     constructor(x,y,radius,level,collisionRadius) {
         this.visible = true;
+        //chooses a random initial point on the canvas to spawn new asteroids
         this.x = x || Math.floor(Math.random() * canvasWidth);
         this.y = y || Math.floor(Math.random() * canvasHeight);
         this.speed = 1;
@@ -227,13 +230,14 @@ class Asteroid{
         this.angle = Math.floor(Math.random() * 359);
         this.strokeColor = 'white';
         this.collisionRadius = collisionRadius || 46;
-        // Used to decide if this asteroid can be broken into smaller pieces
         this.level = level || 1;
     }
     Update(){
+        //direction the asteroid is moving is used to draw asteroids in motion
         let radians = this.angle / Math.PI * 180;
         this.x += Math.cos(radians) * this.speed;
         this.y += Math.sin(radians) * this.speed;
+        //if an asteroid reaches offscreen, wrap it around
         if (this.x < this.radius) {
             this.x = canvas.width;
         }
@@ -249,12 +253,16 @@ class Asteroid{
     }
     Draw(){
         ctx.beginPath();
+        //drawing hexagonal asteroids
         let vertAngle = ((Math.PI * 2) / 6);
+        //determining an angle for travel
         var radians = this.angle / Math.PI * 180;
+        //drawing the 6 sides of the asteroid
         for(let i = 0; i < 6; i++){
             ctx.lineTo(this.x - this.radius * Math.cos(vertAngle * i + radians), this.y - this.radius * Math.sin(vertAngle * i + radians));
         }
         ctx.closePath();
+        //if the asteroid is level 4 (which means it's been broken down into gold dust for collecting) display it as yellow
         if (this.level == 4){
             ctx.strokeStyle = 'yellow';
             ctx.fillstyle = 'yellow';
@@ -267,22 +275,19 @@ class Asteroid{
     }
 }
 
-function CircleCollision(p1x, p1y, r1, p2x, p2y, r2){
+function isColliding(p1x, p1y, r1, p2x, p2y, r2){
     let radiusSum;
     let xDiff;
     let yDiff;
-
+    //taking the sum of the radii of the two objects and the difference between their x and y values to determine collision
     radiusSum = r1 + r2;
     xDiff = p1x - p2x;
     yDiff = p1y - p2y;
-
-    if (radiusSum > Math.sqrt((xDiff * xDiff) + (yDiff * yDiff))) {
-        return true;
-    } else {
-        return false;
-    }
+    //returns true or false depending on collision found
+    return radiusSum > Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
 }
 
+//calling the levelup function depending on which button was clicked
 function topSpeedClicked(){
     levelUp("TopSpeed");
 }
@@ -301,6 +306,7 @@ function levelUp (buttonClicked){
     let btnTopSpeed = document.getElementById("buttonTopSpeed");
     let btnFireRate = document.getElementById("buttonFireRate");
 
+    //boosting the weight, top speed, or fire rate stats of the ship when the buttons are clicked to level up, then hiding them
     if (buttonClicked === "Weight"){
         ship.weight-=0.005;
     }
@@ -321,63 +327,52 @@ function levelUp (buttonClicked){
 }
 
 
-// Handles drawing life ships on screen
-function DrawLifeShips(){
+function DrawHP(){
     let startX = 1350;
     let startY = 10;
     let points = [[9, 9], [-9, 9]];
-    ctx.strokeStyle = 'white'; // Stroke color of ships
-    // Cycle through all live ships remaining
+    ctx.strokeStyle = 'white';
+    //depending on how many lives are left, constantly draw life indicators at the top right
     for(let i = 0; i < lives; i++){
-        // Start drawing ship
         ctx.beginPath();
-        // Move to origin point
         ctx.moveTo(startX, startY);
-        // Cycle through all other points
         for(let j = 0; j < points.length; j++){
             ctx.lineTo(startX + points[j][0],
                 startY + points[j][1]);
         }
-        // Draw from last point to 1st origin point
         ctx.closePath();
-        // Stroke the ship shape white
         ctx.stroke();
-        // Move next shape 30 pixels to the left
+        //move to the starting point for the next life indicator
         startX -= 30;
     }
 }
 
 function Render() {
-    // Check if the ship is moving forward
-    ship.movingForward = (keys[87]);
 
+    ship.movingForward = (keys[87]);
+    //calling this every frame creates proper timing for shot cooldown
     gun.update();
 
     if (keys[68]) {
-        // d key rotate right
         ship.Rotate(1);
     }
     if (keys[65]) {
-        // a key rotate left
         ship.Rotate(-1);
     }
 
     if (keys[32]){
-
         gun.fire();
     }
 
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    // Display score
     ctx.fillStyle = 'white';
     ctx.font = '21px Helvetica';
     ctx.fillText("EXP : " + ship.totalExp.toString(), 20, 35);
 
-    // If no lives signal game over
+    //handling game over, removing players abilities to interact and displaying game over text
     if(lives <= 0){
-        // If Game over remove event listeners to stop getting keyboard input
         document.body.removeEventListener("keydown", HandleKeyDown);
         document.body.removeEventListener("keyup", HandleKeyUp);
 
@@ -388,6 +383,7 @@ function Render() {
     }
 
 
+    //creating 8 new asteroids on startup
     if(asteroids.length === 0){
         ship.x = canvasWidth / 2;
         ship.y = canvasHeight / 2;
@@ -401,17 +397,21 @@ function Render() {
     }
 
 
-    DrawLifeShips();
+    DrawHP();
 
-    // collision of ship with asteroid
-    if (asteroids.length !== 0 && ship.numBlinks == 0) {
+    //if there are asteroids present and the ship is not invulnerable
+    if (asteroids.length !== 0 && ship.numBlinks === 0) {
+        //go through the list of asteroids
         for(let k = 0; k < asteroids.length; k++){
-            if(CircleCollision(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
-                if (asteroids[k].level == 4){
+            //check collision of the ship's current position with the current position of all asteroids until we've found one it's colliding with
+            if(isColliding(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
+                //if the collision happens with a level 4 asteroid (gold dust) process collection and exp gain
+                if (asteroids[k].level === 4){
                     asteroids.splice(k,1);
                     ship.currentExp += 1;
                     ship.totalExp +=1;
                 }
+                //otherwise you die
                 else{
                     handleDeath();
                 }
@@ -419,42 +419,44 @@ function Render() {
         }
     }
 
-    //collision with bullet and asteroid
-    if (asteroids.length !== 0 && bullets.length != 0){
+    //if asteroids and bullets exist on the screen
+    if (asteroids.length !== 0 && bullets.length !== 0){
         loop1:
+        //go through the arrays of the asteroids and bullets
             for(let l = 0; l < asteroids.length; l++){
+                //for each asteroid check if all bullets have collided with them
                 for(let m = 0; m < bullets.length; m++){
-                    if(CircleCollision(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
-                        // Check if asteroid can be broken into smaller pieces
+                    //check for collision between all bullets for the current asteroid
+                    if(isColliding(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
+                        // if the asteroid can be broken down, reduce level by one and display the broken asteroids, removing the old one
                         if(asteroids[l].level === 1){
                             asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
                             asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
                             asteroids.splice(l,1);
                             bullets.splice(m,1);
+                            //same as above
                         } else if(asteroids[l].level === 2){
                             asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 15, 3, 12));
                             asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12));
                             asteroids.splice(l,1);
                             bullets.splice(m,1);
+                            //create gold dust and destroy the smallest asteroids
                         }else if(asteroids[l].level === 3){
-                            asteroid1 = new Asteroid(asteroids[l].x - 2, asteroids[l].y - 5, 5, 4, 6);
+                            let asteroid1 = new Asteroid(asteroids[l].x - 2, asteroids[l].y - 5, 5, 4, 6);
                             asteroid1.speed = 0.1;
                             asteroids.push(asteroid1);
-                            asteroid2 = new Asteroid(asteroids[l].x + 2, asteroids[l].y + 5, 5, 4, 6);
+                            let asteroid2 = new Asteroid(asteroids[l].x + 2, asteroids[l].y + 5, 5, 4, 6);
                             asteroid2.speed = 0.1;
                             asteroids.push(asteroid2);
-                            asteroid3 = new Asteroid(asteroids[l].x - 4, asteroids[l].y - 5, 5, 4, 6);
+                            let asteroid3 = new Asteroid(asteroids[l].x - 4, asteroids[l].y - 5, 5, 4, 6);
                             asteroid3.speed = 0.1;
                             asteroids.push(asteroid3);
-                            asteroid4 = new Asteroid(asteroids[l].x + 4, asteroids[l].y + 5, 5, 4, 6);
+                            let asteroid4 = new Asteroid(asteroids[l].x + 4, asteroids[l].y + 5, 5, 4, 6);
                             asteroid4.speed = 0.1
                             asteroids.push(asteroid4);
                             asteroids.splice(l,1);
                             bullets.splice(m,1);
                         }
-
-                        // Used to break out of loops because splicing arrays
-                        // you are looping through will break otherwise
                         break loop1;
                     }
                 }
@@ -466,6 +468,7 @@ function Render() {
         ship.Draw();
     }
 
+    //processing levelup, changing the exp values and displays and enabling the buttons to be clicked
    if (ship.currentExp >= ship.expToLevel){
        ship.expToLevel += 5;
        ship.currentExp = 0;
@@ -487,12 +490,14 @@ function Render() {
        btnTopSpeed.style.visibility = "visible";
    }
 
+   //drawing the bullets
     if (bullets.length !== 0) {
         for(let i = 0; i < bullets.length; i++){
             bullets[i].Update();
             bullets[i].Draw();
         }
     }
+    //drawing the asteroids
     if (asteroids.length !== 0) {
         for(let j = 0; j < asteroids.length; j++){
             asteroids[j].Update();
@@ -500,7 +505,7 @@ function Render() {
         }
     }
 
-    // Updates the high score using local storage
+    //high score is stored locally, this also displays the current level of the ship at the top left
     highScore = Math.max(ship.totalExp, highScore);
     localStorage.setItem(localStorageName, highScore);
     ctx.font = '21px Helvetica';
